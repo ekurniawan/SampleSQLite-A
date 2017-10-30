@@ -1,8 +1,11 @@
 package data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import models.MyWish;
 
 /**
  * Created by erick on 30/10/2017.
@@ -16,7 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String strCreateSql = "create table wishes (itemId integer primary key,"+
+        String strCreateSql = "create table wishes (itemId integer primary key autoincrement,"+
                 "title text,content text, recordDate long);";
         sqLiteDatabase.execSQL(strCreateSql);
     }
@@ -25,5 +28,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("drop table if exists wishes");
         onCreate(sqLiteDatabase);
+    }
+
+    public void addWishes(MyWish wish){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("title",wish.getTitle());
+        values.put("content",wish.getContent());
+        values.put("recordDate",java.lang.System.currentTimeMillis());
+
+        db.insert("wishes",null,values);
+        db.close();
     }
 }

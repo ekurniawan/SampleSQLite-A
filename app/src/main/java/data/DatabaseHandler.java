@@ -11,16 +11,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     public DatabaseHandler(Context context) {
-        super(context,Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
+        super(context,"wishdb", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
+        String strCreateSql = "create table wishes (itemId integer primary key,"+
+                "title text,content text, recordDate long);";
+        sqLiteDatabase.execSQL(strCreateSql);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        sqLiteDatabase.execSQL("drop table if exists wishes");
+        onCreate(sqLiteDatabase);
     }
 }

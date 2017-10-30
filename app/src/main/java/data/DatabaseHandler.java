@@ -30,7 +30,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void addWishes(MyWish wish){
+    public void addWish(MyWish wish){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("title",wish.getTitle());
@@ -38,6 +38,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put("recordDate",java.lang.System.currentTimeMillis());
 
         db.insert("wishes",null,values);
+        db.close();
+    }
+
+    public void deleteWish(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("wishes","itemId=?",new String[]{String.valueOf(id)});
+        db.close();
+    }
+
+    private void updateWish(MyWish wish){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("title",wish.getTitle());
+        values.put("content",wish.getContent());
+        db.update("wishes",values,"itemId=?",new String[]{String.valueOf(wish.getItemId())});
         db.close();
     }
 }

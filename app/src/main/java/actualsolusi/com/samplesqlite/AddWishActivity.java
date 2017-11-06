@@ -19,7 +19,6 @@ public class AddWishActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_wish);
 
-
         etTitle = (EditText)findViewById(R.id.etTitle);
         etContent = (EditText)findViewById(R.id.etContent);
         btnAddWish = (Button)findViewById(R.id.btnAddWish);

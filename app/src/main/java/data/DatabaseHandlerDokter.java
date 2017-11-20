@@ -2,8 +2,11 @@ package data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
 
 import models.Dokter;
 
@@ -56,5 +59,40 @@ public class DatabaseHandlerDokter extends SQLiteOpenHelper {
         values.put("Spesialisasi",dokter.getSpesialisasi());
         db.update("dokter",values,"Nik=?",new String[]{dokter.getNik()});
         db.close();
+    }
+
+    public Dokter getDokterById(String Nik){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from dokter where Nik=?",
+                new String[]{Nik});
+        if(cursor!=null){
+            cursor.moveToFirst();
+        }
+
+        Dokter dokter = new Dokter();
+        dokter.setNik(cursor.getString(cursor.getColumnIndex("Nik")));
+        dokter.setNama(cursor.getString(cursor.getColumnIndex("Nama")));
+        dokter.setSpesialisasi(cursor.getString(cursor.getColumnIndex("Spesialisasi")));
+        dokter.setAlamat(cursor.getString(cursor.getColumnIndex("Alamat")));
+        db.close();
+        return dokter;
+    }
+
+    public ArrayList<Dokter> getAllDokter(){
+        ArrayList<Dokter> dokterList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from dokter order by Nama asc",null);
+        if(cursor.moveToFirst()){
+            do{
+                Dokter dokter = new Dokter();
+                dokter.setNik(cursor.getString(cursor.getColumnIndex("Nik")));
+                dokter.setNama(cursor.getString(cursor.getColumnIndex("Nama")));
+                dokter.setSpesialisasi(cursor.getString(cursor.getColumnIndex("Spesialisasi")));
+                dokter.setAlamat(cursor.getString(cursor.getColumnIndex("Alamat")));
+                dokterList.add(dokter);
+            }while (cursor.moveToNext());
+        }
+        db.close();
+        return dokterList;
     }
 }

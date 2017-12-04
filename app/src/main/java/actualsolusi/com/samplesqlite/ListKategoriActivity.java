@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import models.Kategori;
 import services.KategoriServices;
 
 public class ListKategoriActivity extends AppCompatActivity {
-    private Button btnShow;
+    private Button btnShow,btnInsert;
     private List<Kategori> listKategori;
 
 
@@ -31,6 +33,40 @@ public class ListKategoriActivity extends AppCompatActivity {
                 loadContent();
             }
         });
+
+        btnInsert = (Button)findViewById(R.id.btnInsert);
+        btnInsert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InsertData();
+
+            }
+        });
+    }
+
+    private void InsertData(){
+        new AsyncTask<Void,Void,Void>(){
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Kategori newKat = new Kategori();
+                newKat.setNamaKategori("Android Studio Kelas A");
+                try {
+                    KategoriServices.PostKategori(newKat);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                Toast.makeText(getApplicationContext(),"Data berhasil ditambah !",
+                        Toast.LENGTH_LONG).show();
+            }
+        }.execute();
     }
 
     private void loadContent(){

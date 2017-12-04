@@ -12,8 +12,11 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import models.Kategori;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -48,5 +51,17 @@ public final class KategoriServices {
             Log.d("Kesalahan",jEx.getLocalizedMessage());
         }
         return listKategori;
+    }
+
+    public static int PostKategori(Kategori kategori) throws JSONException,IOException{
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(SERVICE_URL+"api/Kategori").newBuilder();
+        String url = urlBuilder.build().toString();
+        JSONObject newKategori = new JSONObject();
+        newKategori.put("NamaKategori",kategori.getNamaKategori());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json;charset=utf-8"),
+                newKategori.toString());
+        Request request = new Request.Builder().url(url).post(body).build();
+        Response response = _client.newCall(request).execute();
+        return response.code();
     }
 }
